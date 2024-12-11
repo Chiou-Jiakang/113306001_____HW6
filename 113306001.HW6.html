@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>113306001_HW6_1A2B</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #0077cc;
+            margin: 20px 0;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        #guess {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #0077cc;
+            border-radius: 5px;
+            width: 200px;
+            margin: 10px 5px 10px 0;
+        }
+        #guess:focus {
+            outline: none;
+            border-color: #005fa3;
+            box-shadow: 0 0 5px rgba(0, 119, 204, 0.5);
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: #0077cc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        button:active {
+            background-color: #004080;
+        }
+        #gameLog {
+            margin-top: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+            margin-right: auto;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        #gameLog p {
+            margin: 10px 0;
+            font-size: 18px;
+            text-align: center; 
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>113306001_HW6_1A2B</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #0077cc;
+            margin: 20px 0;
+        }
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+        #guess {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #0077cc;
+            border-radius: 5px;
+            width: 200px;
+            margin: 10px 5px 10px 0;
+        }
+        #guess:focus {
+            outline: none;
+            border-color: #005fa3;
+            box-shadow: 0 0 5px rgba(0, 119, 204, 0.5);
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            color: white;
+            background-color: #0077cc;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005fa3;
+        }
+        button:active {
+            background-color: #004080;
+        }
+        #gameLog {
+            margin-top: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-left: auto;
+            margin-right: auto;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        #gameLog p {
+            margin: 10px 0;
+            font-size: 18px;
+            text-align: center; 
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <h1>113306001_HW6_1A2B</h1>
+    <input id="guess" type="text" placeholder="請輸入四個不重複的數字"> 
+    <button id="guessButton" onclick="checkGuess()">猜!</button>
+    </br>
+    <h2>遊戲紀錄</h2>
+    <div id="gameLog"></div>
+    <script>
+        // 初始化
+        const answer = [];
+        const numbers = Array.from({ length: 10 }, (_, i) => i);
+        let attempts = 0;
+
+        // 隨機產生答案
+        while (answer.length < 4) {
+            const index = Math.floor(Math.random() * numbers.length);
+            answer.push(numbers[index]);
+            numbers.splice(index, 1);
+        }
+
+        function hasDuplicates(input) {
+            const digitsArray = input.split("");
+            return new Set(digitsArray).size !== digitsArray.length;
+        }
+
+        function checkGuess() {
+            const input = document.getElementById("guess").value;
+            if (input.length !== 4 || isNaN(input) || hasDuplicates(input)) {
+                alert("輸入有誤！請輸入四個不重複的數字。");
+                document.getElementById("guess").value = "";
+                return;
+            }
+
+            attempts++;
+            const inputArray = input.split("").map(Number);
+            let A = 0, B = 0;
+
+            inputArray.forEach((num, idx) => {
+                if (num === answer[idx]) {
+                    A++;
+                } else if (answer.includes(num)) {
+                    B++;
+                }
+            });
+
+            const log = `第${attempts}次: ${input} ⮕ ${A}A${B}B`;
+            document.getElementById("gameLog").innerHTML += `<p>${log}</p>`;
+            document.getElementById("guess").value = "";
+
+            if (A === 4) {
+                alert(`恭喜答對！答案是 ${answer.join("")}，共猜了 ${attempts} 次。`);
+                location.reload();
+            }
+        }
+
+        document.getElementById("guess").addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                document.getElementById("guessButton").click();
+            }
+        });
+    </script>
+</body>
+</html>
